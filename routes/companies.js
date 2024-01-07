@@ -24,7 +24,6 @@ router.get('/:code', async (req, res, next) => {
         }
         let finalObj = { company: result.rows[0] }
         finalObj['company']['invoices'] = result2.rows[0];
-        console.log(finalObj)
 
         return res.json(finalObj)
     }
