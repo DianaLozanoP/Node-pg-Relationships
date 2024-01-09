@@ -75,7 +75,6 @@ router.put('/:id', async (req, res, next) => {
             const result = await db.query(`UPDATE invoices SET amt=$1 WHERE id=$2 RETURNING id,comp_code,amt,paid,add_date,paid_date`, [amt, id])
             return res.json({ invoice: result.rows[0] })
         }
-
     }
     catch (e) {
         return next(e);
