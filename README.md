@@ -1,5 +1,6 @@
 # Node-pg-Relationships-
 In this exercise, you’ll build a REST-ful backend API server for a simple company/invoice tracker.
+Start server by nodemon server.js
 ## **Step 0: Setup**
 
 - Create a project folder, a Git repo, and a ***package.json***

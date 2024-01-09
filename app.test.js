@@ -1,5 +1,5 @@
 //first  create a test environment
-process.env.NODE_ENV = "test";
+// process.env.NODE_ENV = "test";
 
 //suoertest to test endpoints and routes on HTTP server
 const request = require("supertest");
