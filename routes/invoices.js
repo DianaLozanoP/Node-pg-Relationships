@@ -4,6 +4,15 @@ const router = express.Router();
 const db = require('../db');
 const ExpressError = require("../expressError");
 
+function getCurrentDate() {
+    const today = new Date();
+    const year = today.getFullYear();
+    const month = String(today.getMonth() + 1).padStart(2, '0'); // January is 0!
+    const day = String(today.getDate()).padStart(2, '0');
+
+    return `${year}-${month}-${day}`;
+}
+
 router.get('/', async (req, res, next) => {
     try {
         const results = await db.query(`SELECT * FROM invoices`);
@@ -53,12 +62,20 @@ router.post('/', async (req, res, next) => {
 router.put('/:id', async (req, res, next) => {
     try {
         const { id } = req.params;
-        const { amt } = req.body;
-        const result = await db.query(`UPDATE invoices SET amt=$1 WHERE id=$2 RETURNING id,comp_code,amt,paid,add_date,paid_date`, [amt, id])
-        if (result.rows.length === 0) {
-            throw new ExpressError(`Can not find company with code of ${id} `, 404)
+        const { amt, paid } = req.body;
+        const formattedDate = getCurrentDate();
+        if (paid === 'True') {
+            const result = await db.query(`UPDATE invoices SET amt=$1, paid_date=$2, paid=true WHERE id=$3 RETURNING id,comp_code,amt,paid,add_date,paid_date`, [amt, formattedDate, id])
+            if (result.rows.length === 0) {
+                throw new ExpressError(`Can not find company with code of ${id} `, 404)
+            }
+            return res.json({ invoice: result.rows[0] })
         }
-        return res.json({ invoice: result.rows[0] })
+        else {
+            const result = await db.query(`UPDATE invoices SET amt=$1 WHERE id=$2 RETURNING id,comp_code,amt,paid,add_date,paid_date`, [amt, id])
+            return res.json({ invoice: result.rows[0] })
+        }
+
     }
     catch (e) {
         return next(e);
