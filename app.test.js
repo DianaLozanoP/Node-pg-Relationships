@@ -54,3 +54,8 @@ describe('DELETE/companies/:code', () => {
         expect(res.body).toEqual({ status: "DELETED" });
     })
 })
+
+afterAll(async function () {
+  // close db connection
+  await db.end();
+});
